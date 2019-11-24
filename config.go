@@ -45,6 +45,19 @@ func (c *Configuration) IsUsingTus() bool {
 	return false
 }
 
+func (c *Configuration) BaseURL() string {
+	// If the host configuration has a prefex use that rather than the
+	// IsHTTPS configuration. This is for compatability with reverse proxies.
+	if strings.HasPrefix(Config.Host, "http") {
+		return Config.Host
+	}
+
+	if Config.IsHTTPS() {
+		return "https://" + Config.Host
+	}
+	return "http://" + Config.Host
+}
+
 // Config is the global app configuration
 var Config = &Configuration{}
 
